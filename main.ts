@@ -1,9 +1,62 @@
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (waitForMoveDirection && player1.canMove(0)) {
+        currentDirection = 0
+    }
+})
+function refresh () {
+	
+}
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (waitForMoveDirection && player1.canMove(2)) {
+        currentDirection = 2
+    }
+})
+function aiMove () {
+    let direction = randint(0, 3)
+    while (!player2.canMove(direction)) {
+        console.log(direction)
+        direction = randint(0, 3)
+    }
+    console.log("move :" + direction)
+    player2.move(direction)
+}
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (waitForMoveDirection && player1.canMove(1)) {
+        currentDirection = 1
+    }
+})
+function playerMove () {
+    currentDirection = -1
+    waitForMoveDirection = true
+    while (currentDirection == -1) {
+        pause(10)
+    }
+    waitForMoveDirection = false
+    player1.move(currentDirection)
+}
+function init () {
+    for (let gem of GEMS) {
+        createGem(gem, false)
+    }
+}
+function moveSprite (sprite: Sprite, direction: number) {
+	
+}
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (waitForMoveDirection && player1.canMove(3)) {
+        currentDirection = 3
+    }
+})
+let waitForMoveDirection = false
+let currentDirection = 0
 tiles.setTilemap(tilemap`default`)
 scene.centerCameraAt(80, 72)
-
-
-const DIRECTIONS = [[-1, 0], [0, 1], [1, 0], [0, -1]]
-
+let DIRECTIONS = [
+[-1, 0],
+[0, 1],
+[1, 0],
+[0, -1]
+]
 class Character {
 
     private _scores:{}
@@ -35,13 +88,30 @@ class Character {
     }
 
     move( direction : number):void {
+        tiles.setWallAt(tiles.getTileLocation(this._col, this._row), false)
         this._row += DIRECTIONS[direction][0]
         this._col += DIRECTIONS[direction][1]
-        tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._row, this._col))
+        tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._col, this._row))
+        tiles.setWallAt(tiles.getTileLocation(this._col, this._row), true)
+    }
+
+    canMove(direction:number):boolean {
+        let nextRow = this._row + DIRECTIONS[direction][0]
+        let nextCol = this._col + DIRECTIONS[direction][1]
+
+        if (nextRow < 0 || nextRow > 8 || nextCol < 0 || nextCol > 9) {
+            return false
+        }
+
+        if (tiles.getTileLocation(nextCol, nextRow).isWall()) {
+            return false
+        }
+
+        return true
+
     }
     
 }
-
 class Gem{
 
     private _name: string;
@@ -71,9 +141,8 @@ class Gem{
 
 
 }
-
-let GEMS = [
-    new Gem("red",img`
+const GEMS = [
+new Gem("red",img`
         . . . . . . . e c 7 . . . . . .
         . . . . e e e c 7 7 e e . . . .
         . . c e e e e c 7 e 2 2 e e . .
@@ -146,7 +215,6 @@ new Gem("yellow", img`
     . . . . . . c c c c c c b b 4 .
 `, 4, 8)
 ]
-
 const player1 = new Character(img`
     . . . . . . f f f f . . . . . .
     . . . . f f f 2 2 f f f . . . .
@@ -166,7 +234,6 @@ const player1 = new Character(img`
     . . . . . f f . . f f . . . . .
 `, 0, 0,
     info.life, info.setLife, (p: number) => info.changeLifeBy(-p))
-
 const player2 = new Character(img`
     . . . . . . 5 . 5 . . . . . . .
     . . . . . f 5 5 5 f f . . . . .
@@ -184,12 +251,10 @@ const player2 = new Character(img`
     . . . f 3 3 5 3 3 5 3 3 f . . .
     . . . f f f f f f f f f f . . .
     . . . . . f f . . f f . . . . .
-`, 0, 0,
+`, 5, 4,
     () => {return info.player2.life()}, 
     (p:number) => {info.player2.setLife(p)},
      (p: number) => info.player2.changeLifeBy(-p))
-
-
 function createGem(gem:Gem, randomPosition : boolean) {
     let gemSprite = sprites.create(gem.icon, SpriteKind.Food)
 
@@ -201,55 +266,11 @@ function createGem(gem:Gem, randomPosition : boolean) {
     }
 
 }
-
-function init() {
-    
-
-    for (let gem of GEMS) {
-        createGem(gem, false)
-    }
- 
-}
-
-
-
-function moveSprite(sprite:Sprite, direction: number) {
-    
-    
-
-
-
-}
-
-let currentDirection = -1
-let waitForMoveDirection = false
-function playerMove() {
-    waitForMoveDirection = true
-    while (currentDirection == -1) {
-        pause(10)
-    }
-
-    waitForMoveDirection = false
-    
-}
-
-function refresh() {
-
-}
-
-function aiMove() {
-    player2.move(randint(0, 3))
-}
-
-
-
+currentDirection = -1
 init()
-
-forever( () => {
-
+forever(function () {
     playerMove()
     refresh()
     aiMove()
     refresh()
-    
 })
