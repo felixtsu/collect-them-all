@@ -1,0 +1,18 @@
+<xml xmlns="https://developers.google.com/blockly/xml"><variables><variable id="KX84`]P_5/UKFA+Q,fo8">mySprite</variable><variable type="KIND_SpriteKind" id="XEG5L1.z}wS2CH?--jEF">Player</variable><variable type="KIND_SpriteKind" id="bY;UHZsr3+plZJ%jex`l">Projectile</variable><variable type="KIND_SpriteKind" id="kVKEJ+eF-BLPkJd;:;l(">Food</variable><variable type="KIND_SpriteKind" id="A?yhS]oWx59.nP8R1Z)s">Enemy</variable></variables><block type="pxt-on-start" id="-0bN*RA;d.FN@Jn!6h/E" x="0" y="0"><statement name="HANDLER"><block type="tilemap_editor" id="]_k=fkboB-c^+6k:RBN#"><field name="tilemap">tilemap`default`</field><data>{"commentRefs":[],"fieldData":{"tilemap":"级别1"}}</data><next><block type="camerapos" id="lS2j/[%DH9K|waSqAk?H"><value name="x"><shadow type="math_number" id="^)UX*DyG^fD{t2^+#x7l"><field name="NUM">80</field></shadow></value><value name="y"><shadow type="math_number" id="=fCi)lDbm=/B1Honrbcu"><field name="NUM">72</field></shadow></value><next><block type="variables_set" id="gP`IMw-A0j|([u2dgOc8"><field name="VAR" id="KX84`]P_5/UKFA+Q,fo8">mySprite</field><value name="VALUE"><shadow xmlns="http://www.w3.org/1999/xhtml" type="math_number"><field name="NUM">0</field></shadow><block type="spritescreate" id="zFhUA!m-BqDu,|pR!*#e"><value name="img"><shadow type="screen_image_picker" id="kpxfB~u]qkhY;%n{{W|E"><field name="img">img`
+. . . . . . f f f f . . . . . . 
+. . . . f f f 2 2 f f f . . . . 
+. . . f f f 2 2 2 2 f f f . . . 
+. . f f f e e e e e e f f f . . 
+. . f f e 2 2 2 2 2 2 e e f . . 
+. . f e 2 f f f f f f 2 e f . . 
+. . f f f f e e e e f f f f . . 
+. f f e f b f 4 4 f b f e f f . 
+. f e e 4 1 f d d f 1 4 e e f . 
+. . f e e d d d d d d e e f . . 
+. . . f e e 4 4 4 4 e e f . . . 
+. . e 4 f 2 2 2 2 2 2 f 4 e . . 
+. . 4 d f 2 2 2 2 2 2 f d 4 . . 
+. . 4 4 f 4 4 5 5 4 4 f 4 4 . . 
+. . . . . f f f f f f . . . . . 
+. . . . . f f . . f f . . . . . 
+`</field><data>{"commentRefs":[],"fieldData":{"img":"kpxfB~u]qkhY;%n{{W|E"}}</data></shadow></value><value name="kind"><shadow type="spritekind" id=",~}kM5=8@A(P?K5K*qoP"><field name="MEMBER">Player</field></shadow></value></block></value></block></next></block></next></block></statement></block></xml>
