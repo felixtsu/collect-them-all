@@ -11,9 +11,10 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
         currentDirection = 2
     }
 })
+
 function aiMove () {
-    let direction = randint(0, 3)
-    while (!player2.canMove(direction)) {
+    direction = randint(0, 3)
+    while (!(player2.canMove(direction))) {
         console.log(direction)
         direction = randint(0, 3)
     }
@@ -34,6 +35,7 @@ function playerMove () {
     waitForMoveDirection = false
     player1.move(currentDirection)
 }
+
 function init () {
     for (let gem of GEMS) {
         gem.init()
@@ -47,6 +49,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
         currentDirection = 3
     }
 })
+let direction = 0
 let waitForMoveDirection = false
 let currentDirection = 0
 tiles.setTilemap(tilemap`default`)
@@ -149,12 +152,12 @@ class Gem{
         
 
         let currentLoc = tiles.getTileLocation(this._col, this._row)
-        tiles.setTileAt(currentLoc, img``)
+        tiles.setTileAt(currentLoc, sprites.castle.tilePath5)
 
         let loc = tiles.getTileLocation(col, row)
         tiles.placeOnTile(this._sprite, loc)
 
-        tiles.setTileAt(loc, myTiles.transparency16)
+        tiles.setTileAt(loc, assets.tile`occupied`)
     }
 
     changePosition() {
@@ -166,10 +169,6 @@ class Gem{
 
 
 }
-
-
-
-
 const GEMS = [
 new Gem("red",img`
         . . . . . . . e c 7 . . . . . .
@@ -244,7 +243,6 @@ new Gem("yellow", img`
     . . . . . . c c c c c c b b 4 .
 `, 4, 8)
 ]
-
 const player1 = new Character(0, img`
     . . . . . . f f f f . . . . . .
     . . . . f f f 2 2 f f f . . . .
@@ -285,9 +283,7 @@ const player2 = new Character(1, img`
     () => {return info.player2.life()}, 
     (p:number) => {info.player2.setLife(p)},
      (p: number) => info.player2.changeLifeBy(-p))
-
-const PLAYERS = [player1, player2]
-
+let PLAYERS = [player1, player2]
 currentDirection = -1
 init()
 forever(function () {
