@@ -12,7 +12,9 @@
         "README.md",
         "assets.json",
         "tilemap.g.jres",
-        "tilemap.g.ts"
+        "tilemap.g.ts",
+        "collect.ts",
+        "collect-core.ts"
     ],
     "testFiles": [
         "test.ts"
