@@ -2,11 +2,13 @@
 namespace myTiles {
     //% fixedInstance jres blockIdentity=images._tile
     export const transparency16 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile1 = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
             case "default":
-            case "级别1":return tiles.createTilemap(hex`0a000900000000000000000000000001010100000101010000010000000000000100000100010101010001000000000000000000000000010001010101000100000100000000000001000001010100000101010000000000000000000000`, img`
+            case "级别1":return tiles.createTilemap(hex`0a000900020202020202020202020201010102020101010202010202020202020102020102010101010201020202020202020202020202010201010101020102020102020202020201020201010102020101010202020202020202020202`, img`
 . . . . . . . . . . 
 . 2 2 2 . . 2 2 2 . 
 . 2 . . . . . . 2 . 
@@ -16,7 +18,7 @@ namespace myTiles {
 . 2 . . . . . . 2 . 
 . 2 2 2 . . 2 2 2 . 
 . . . . . . . . . . 
-`, [myTiles.transparency16,sprites.builtin.forestTiles0], TileScale.Sixteen);
+`, [myTiles.transparency16,sprites.builtin.forestTiles0,sprites.castle.tilePath5], TileScale.Sixteen);
         }
         return null;
     })
@@ -24,6 +26,8 @@ namespace myTiles {
     helpers._registerFactory("tile", function(name: string) {
         switch(helpers.stringTrim(name)) {
             case "transparency16":return transparency16;
+            case "occupied":
+            case "tile1":return tile1;
         }
         return null;
     })

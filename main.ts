@@ -36,7 +36,7 @@ function playerMove () {
 }
 function init () {
     for (let gem of GEMS) {
-        createGem(gem, false)
+        gem.init()
     }
 }
 function moveSprite (sprite: Sprite, direction: number) {
@@ -64,15 +64,17 @@ class Character {
     private _row:number
     private _col:number
     private sprite : Sprite
+    private _id:number
 
     power : ()=>number
     setPower: (p:number) => void
     decrPower: (p:number) => void
 
-    constructor(icon:Image, row:number, col:number,
+    constructor(id:number, icon:Image, row:number, col:number,
         power: () => number, 
         setPower: (p: number) => void, 
         decrPower: (p: number) => void) {
+        this._id = id
         this._icon = icon
         this._row = row
         this._col = col
@@ -116,14 +118,24 @@ class Gem{
 
     private _name: string;
     private _icon:Image;
-    private _defaultRow :number;
-    private _defaultCol:number;
+    private _row :number;
+    private _col:number;
+    private _sprite:Sprite;
 
     constructor(name:string, icon:Image, defaultRow : number, defaultCol:number) {
         this._name = name
         this._icon = icon
-        this._defaultRow = defaultRow
-        this._defaultCol = defaultCol
+        this._row = defaultRow
+        this._col = defaultCol
+        
+    }
+
+    init() {
+        this._sprite = sprites.create(this._icon, SpriteKind.Food)
+        sprites.setDataString(this._sprite, "name", this._name)
+
+        this._place(this._col, this._row)
+
     }
 
     get name() {
@@ -132,15 +144,32 @@ class Gem{
     get icon() {
         return this._icon
     }
-    get defaultRow() {
-        return this._defaultRow
+
+    _place(col : number, row : number) {
+        
+
+        let currentLoc = tiles.getTileLocation(this._col, this._row)
+        tiles.setTileAt(currentLoc, img``)
+
+        let loc = tiles.getTileLocation(col, row)
+        tiles.placeOnTile(this._sprite, loc)
+
+        tiles.setTileAt(loc, myTiles.transparency16)
     }
-    get defaultCol() {
-        return this._defaultCol
+
+    changePosition() {
+        
+
+        
+
     }
 
 
 }
+
+
+
+
 const GEMS = [
 new Gem("red",img`
         . . . . . . . e c 7 . . . . . .
@@ -215,7 +244,8 @@ new Gem("yellow", img`
     . . . . . . c c c c c c b b 4 .
 `, 4, 8)
 ]
-const player1 = new Character(img`
+
+const player1 = new Character(0, img`
     . . . . . . f f f f . . . . . .
     . . . . f f f 2 2 f f f . . . .
     . . . f f f 2 2 2 2 f f f . . .
@@ -234,7 +264,7 @@ const player1 = new Character(img`
     . . . . . f f . . f f . . . . .
 `, 0, 0,
     info.life, info.setLife, (p: number) => info.changeLifeBy(-p))
-const player2 = new Character(img`
+const player2 = new Character(1, img`
     . . . . . . 5 . 5 . . . . . . .
     . . . . . f 5 5 5 f f . . . . .
     . . . . f 1 5 2 5 1 6 f . . . .
@@ -255,17 +285,9 @@ const player2 = new Character(img`
     () => {return info.player2.life()}, 
     (p:number) => {info.player2.setLife(p)},
      (p: number) => info.player2.changeLifeBy(-p))
-function createGem(gem:Gem, randomPosition : boolean) {
-    let gemSprite = sprites.create(gem.icon, SpriteKind.Food)
 
-    if (randomPosition) {
+const PLAYERS = [player1, player2]
 
-    } else {
-
-        tiles.placeOnTile(gemSprite, tiles.getTileLocation(gem.defaultCol, gem.defaultRow))
-    }
-
-}
 currentDirection = -1
 init()
 forever(function () {
