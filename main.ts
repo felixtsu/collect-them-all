@@ -4,6 +4,19 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 function refresh () {
+
+    let row = 0
+    let col = 0
+    for (let player of PLAYERS) {
+        let loc = player.getLocation()
+        row += loc[0]
+        col += loc[1]
+    }
+
+    col /= 2
+    row /= 2
+
+    scene.centerCameraAt(col * 16 + 8, row * 16 + 8)
 	
 }
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -36,6 +49,32 @@ function playerMove () {
     player1.move(currentDirection)
 }
 
+function getGem(sprite:Sprite) :Gem {
+    let gemName = sprites.readDataString(sprite, "name")
+    for (let gem of GEMS) {
+        if (gem.name == gemName) {
+            return gem
+        }
+    }
+    return null
+}
+
+function getCharacter(playerSprite : Sprite) : Character {
+    let _id = sprites.readDataNumber(playerSprite, "id")
+    return PLAYERS[_id]
+}
+
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, (playerSprite, foodSprite)=> {
+
+    let gem = getGem(foodSprite)
+    let character = getCharacter(playerSprite)
+
+    character.getGem(gem)
+
+    gem.changePosition()
+})
+
+
 function init () {
     for (let gem of GEMS) {
         gem.init()
@@ -62,7 +101,7 @@ let DIRECTIONS = [
 ]
 class Character {
 
-    private _scores:{}
+    private _scores :{[key:string] : number}  = {}
     private _icon:Image
     private _row:number
     private _col:number
@@ -84,11 +123,13 @@ class Character {
         this.power = power
         this.setPower = setPower
         this.decrPower = decrPower
+
         this.sprite = sprites.create(this._icon, SpriteKind.Player)
         tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._row, this._col))
+        sprites.setDataNumber(this.sprite, "id", this._id)
     }
 
-    getLocation(): [number, number] {
+    getLocation(): number[] {
         return [this._row, this._col]
     }
 
@@ -114,6 +155,15 @@ class Character {
 
         return true
 
+    }
+
+    getGem(gem:Gem) {
+
+        if (!this._scores[gem.name]) {
+            this._scores[gem.name] = 1
+        } else {
+            this._scores[gem.name] += 1
+        }
     }
     
 }
@@ -161,10 +211,29 @@ class Gem{
     }
 
     changePosition() {
-        
 
-        
+        let locs = tiles.getTilesByType(sprites.castle.tilePath5)
+        let nextPosition = null;
+        while (true) {
+            let idx = randint(0, locs.length -1)
+            nextPosition = locs[idx]
+            for ( let character of PLAYERS) {
+                let playerLoc = character.getLocation()
+                console.log(playerLoc)
+                console.log(playerLoc[0])
+                console.log(playerLoc[1])
+                console.log(nextPosition.column)
+                console.log(nextPosition.row)
+                if ( nextPosition.column == playerLoc[1] 
+                    && nextPosition.row == playerLoc[0] ){
+                        continue
+                }
+            }
+            break
+        }
 
+        this._place(nextPosition.col, nextPosition.row)
+        
     }
 
 
