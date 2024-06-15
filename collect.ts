@@ -204,6 +204,10 @@ namespace collect {
 
     function aiMove() {
 
+        if ( player2.power() == 0) {
+            return ;
+        }
+
         let playerLoc = player2.getLocation()
         let closest_path = null
 
@@ -235,9 +239,9 @@ namespace collect {
             return;
         }
 
-        if (closest_path.length == 1) {
-            console.log(`${closest_path[0].row}, ${closest_path[0].column}`)
-        }
+        // if (closest_path.length == 1) {
+        //     console.log(`${closest_path[0].row}, ${closest_path[0].column}`)
+        // }
 
         let loc = closest_path[1]
 
@@ -257,17 +261,22 @@ namespace collect {
             }
         }
 
-        if (ans == -1) {
-            console.log(`${rowDiff}, ${colDiff} -> ${loc.row}, ${loc.col}`)
-        }
+        // if (ans == -1) {
+        //     console.log(`${rowDiff}, ${colDiff} -> ${loc.row}, ${loc.col}`)
+        // }
 
-        console.log(`going to ${closest_gem}, direction:${ans}`)
+        // console.log(`going to ${closest_gem}, direction:${ans}`)
 
         player2.move(ans)
 
     }
     
     function playerMove() {
+        if ( player1.power() == 0 ) {
+            return 
+        }
+
+
         currentDirection = -1
 
         while (currentDirection == -1) {
