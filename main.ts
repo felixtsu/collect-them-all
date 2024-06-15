@@ -9,8 +9,8 @@ function refresh () {
     let col = 0
     for (let player of PLAYERS) {
         let loc = player.getLocation()
-        row += loc[0]
-        col += loc[1]
+        row += loc.row
+        col += loc.column
     }
 
     col /= 2
@@ -26,11 +26,71 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 
 function aiMove () {
-    direction = randint(0, 3)
-    while (!(player2.canMove(direction))) {
-        direction = randint(0, 3)
+
+    let playerLoc = player2.getLocation()
+    let closest_path = null
+
+    let closest_gem = ""
+
+    for (let gem of GEMS) {
+        
+        let path = player2.findPath(gem)
+        if (path == null) {
+            continue
+        }
+        if (closest_path == null) {
+            closest_path = path
+            closest_gem = gem.name
+        } else if ( closest_path.length > path.length) {
+            closest_path = path
+            closest_gem = gem.name
+        }
+
     }
-    player2.move(direction)
+
+    if (closest_path == null) {
+
+        direction = randint(0, 3)
+        while (!(player2.canMove(direction))) {
+            direction = randint(0, 3)
+        }
+        player2.move(direction)
+        return ;
+    }
+
+    if (closest_path.length == 1) {
+        console.log(`${closest_path[0].row}, ${closest_path[0].column}`)
+    }
+
+    let loc = closest_path[1]
+
+    let rowDiff = loc.row - playerLoc.row
+    let colDiff = loc.column - playerLoc.column
+
+    // 这个地方有问题，如果两个格子是通的，会选择斜着走，我们的处理是如果abs_sum == 2
+    // 就抹掉1一个
+
+    if (Math.abs(rowDiff) + Math.abs(colDiff) == 2) {
+        rowDiff = 0
+    }
+
+    let ans = -1
+    for (let i = 0; i < DIRECTIONS.length; i++) {
+        let direction = DIRECTIONS[i]
+        if (direction[0] == rowDiff && direction[1] == colDiff) {
+            ans = i
+            break
+        }
+    }
+
+    if (ans == -1) {
+        console.log(`${rowDiff}, ${colDiff} -> ${loc.row}, ${loc.col}`)
+    }
+
+    console.log(`going to ${closest_gem}, direction:${ans}`)
+
+    player2.move(ans)
+
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if (waitForMoveDirection && player1.canMove(1)) {
@@ -128,16 +188,20 @@ class Character {
         this.setPower(100)
     }
 
-    getLocation(): number[] {
-        return [this._row, this._col]
+    getLocation(): tiles.Location {
+        return tiles.getTileLocation(this._col, this._row)
     }
 
     move( direction : number):void {
-        tiles.setWallAt(tiles.getTileLocation(this._col, this._row), false)
-        this._row += DIRECTIONS[direction][0]
-        this._col += DIRECTIONS[direction][1]
-        tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._col, this._row))
-        tiles.setWallAt(tiles.getTileLocation(this._col, this._row), true)
+        if (direction != -1) {
+            tiles.setWallAt(tiles.getTileLocation(this._col, this._row), false)
+            this._row += DIRECTIONS[direction][0]
+            this._col += DIRECTIONS[direction][1]
+            tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._col, this._row))
+            tiles.setWallAt(tiles.getTileLocation(this._col, this._row), true)
+        }
+
+    
         this.decrPower(1)
     }
 
@@ -163,6 +227,16 @@ class Character {
         } else {
             this._scores[gem.name] += 1
         }
+    }
+
+    findPath(gem:Gem) : tiles.Location[] {
+
+        tiles.setWallAt(this.getLocation(), false)
+
+        let result = scene.aStar(this.getLocation(), gem.getLocation())
+        tiles.setWallAt(this.getLocation(), true)
+        
+        return result
     }
     
 }
@@ -207,6 +281,8 @@ class Gem{
         tiles.placeOnTile(this._sprite, loc)
 
         tiles.setTileAt(loc, assets.tile`occupied`)
+        this._col = col
+        this._row = row
     }
 
     changePosition() {
@@ -218,13 +294,8 @@ class Gem{
             nextPosition = locs[idx]
             for ( let character of PLAYERS) {
                 let playerLoc = character.getLocation()
-                console.log(playerLoc)
-                console.log(playerLoc[0])
-                console.log(playerLoc[1])
-                console.log(nextPosition.column)
-                console.log(nextPosition.row)
-                if ( nextPosition.column == playerLoc[1] 
-                    && nextPosition.row == playerLoc[0] ){
+                if ( nextPosition.column == playerLoc.column 
+                    && nextPosition.row == playerLoc.row ){
                         continue
                 }
             }
@@ -233,6 +304,10 @@ class Gem{
 
         this._place(nextPosition.col, nextPosition.row)
         
+    }
+
+    getLocation() : tiles.Location {
+        return tiles.getTileLocation(this._col, this._row)
     }
 
 
