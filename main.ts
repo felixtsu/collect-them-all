@@ -28,10 +28,8 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 function aiMove () {
     direction = randint(0, 3)
     while (!(player2.canMove(direction))) {
-        console.log(direction)
         direction = randint(0, 3)
     }
-    console.log("move :" + direction)
     player2.move(direction)
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -125,8 +123,9 @@ class Character {
         this.decrPower = decrPower
 
         this.sprite = sprites.create(this._icon, SpriteKind.Player)
-        tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._row, this._col))
+        tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._col, this._row))
         sprites.setDataNumber(this.sprite, "id", this._id)
+        this.setPower(100)
     }
 
     getLocation(): number[] {
@@ -139,6 +138,7 @@ class Character {
         this._col += DIRECTIONS[direction][1]
         tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._col, this._row))
         tiles.setWallAt(tiles.getTileLocation(this._col, this._row), true)
+        this.decrPower(1)
     }
 
     canMove(direction:number):boolean {
@@ -154,7 +154,6 @@ class Character {
         }
 
         return true
-
     }
 
     getGem(gem:Gem) {
@@ -348,7 +347,7 @@ const player2 = new Character(1, img`
     . . . f 3 3 5 3 3 5 3 3 f . . .
     . . . f f f f f f f f f f . . .
     . . . . . f f . . f f . . . . .
-`, 5, 4,
+`, 0, 9,
     () => {return info.player2.life()}, 
     (p:number) => {info.player2.setLife(p)},
      (p: number) => info.player2.changeLifeBy(-p))
