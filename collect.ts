@@ -3,80 +3,7 @@ namespace collect {
 
     
 
-    const GEMS = [
-        new Gem("red", img`
-        . . . . . . . e c 7 . . . . . .
-        . . . . e e e c 7 7 e e . . . .
-        . . c e e e e c 7 e 2 2 e e . .
-        . c e e e e e c 6 e e 2 2 2 e .
-        . c e e e 2 e c c 2 4 5 4 2 e .
-        c e e e 2 2 2 2 2 2 4 5 5 2 2 e
-        c e e 2 2 2 2 2 2 2 2 4 4 2 2 e
-        c e e 2 2 2 2 2 2 2 2 2 2 2 2 e
-        c e e 2 2 2 2 2 2 2 2 2 2 2 2 e
-        c e e 2 2 2 2 2 2 2 2 2 2 2 2 e
-        c e e 2 2 2 2 2 2 2 2 2 2 4 2 e
-        . e e e 2 2 2 2 2 2 2 2 2 4 e .
-        . 2 e e 2 2 2 2 2 2 2 2 4 2 e .
-        . . 2 e e 2 2 2 2 2 4 4 2 e . .
-        . . . 2 2 e e 4 4 4 2 e e . . .
-        . . . . . 2 2 e e e e . . . . .
-    `, 4, 1),
-        new Gem("blue", img`
-    . . . . . b b b b b b . . . . .
-    . . . b b 9 9 9 9 9 9 b b . . .
-    . . b b 9 9 9 9 9 9 9 9 b b . .
-    . b b 9 d 9 9 9 9 9 9 9 9 b b .
-    . b 9 d 9 9 9 9 9 1 1 1 9 9 b .
-    b 9 d d 9 9 9 9 9 1 1 1 9 9 9 b
-    b 9 d 9 9 9 9 9 9 1 1 1 9 9 9 b
-    b 9 3 9 9 9 9 9 9 9 9 9 1 9 9 b
-    b 5 3 d 9 9 9 9 9 9 9 9 9 9 9 b
-    b 5 3 3 9 9 9 9 9 9 9 9 9 d 9 b
-    b 5 d 3 3 9 9 9 9 9 9 9 d d 9 b
-    . b 5 3 3 3 d 9 9 9 9 d d 5 b .
-    . b d 5 3 3 3 3 3 3 3 d 5 b b .
-    . . b d 5 d 3 3 3 3 5 5 b b . .
-    . . . b b 5 5 5 5 5 5 b b . . .
-    . . . . . b b b b b b . . . . .
-`, 4, 3),
-        new Gem("orange", img`
-    . . . . c c c b b b b b . . . .
-    . . c c b 4 4 4 4 4 4 b b b . .
-    . c c 4 4 4 4 4 5 4 4 4 4 b c .
-    . e 4 4 4 4 4 4 4 4 4 5 4 4 e .
-    e b 4 5 4 4 5 4 4 4 4 4 4 4 b c
-    e b 4 4 4 4 4 4 4 4 4 4 5 4 4 e
-    e b b 4 4 4 4 4 4 4 4 4 4 4 b e
-    . e b 4 4 4 4 4 5 4 4 4 4 b e .
-    8 7 e e b 4 4 4 4 4 4 b e e 6 8
-    8 7 2 e e e e e e e e e e 2 7 8
-    e 6 6 2 2 2 2 2 2 2 2 2 2 6 c e
-    e c 6 7 6 6 7 7 7 6 6 7 6 c c e
-    e b e 8 8 c c 8 8 c c c 8 e b e
-    e e b e c c e e e e e c e b e e
-    . e e b b 4 4 4 4 4 4 4 4 e e .
-    . . . c c c c c e e e e e . . .
-`, 4, 6),
-        new Gem("yellow", img`
-    4 4 4 . . 4 4 4 4 4 . . . . . .
-    4 5 5 4 4 5 5 5 5 5 4 4 . . . .
-    b 4 5 5 1 5 1 1 1 5 5 5 4 . . .
-    . b 5 5 5 5 1 1 5 5 1 1 5 4 . .
-    . b d 5 5 5 5 5 5 5 5 1 1 5 4 .
-    b 4 5 5 5 5 5 5 5 5 5 5 1 5 4 .
-    c d 5 5 5 5 5 5 5 5 5 5 5 5 5 4
-    c d 4 5 5 5 5 5 5 5 5 5 5 1 5 4
-    c 4 5 5 5 d 5 5 5 5 5 5 5 5 5 4
-    c 4 d 5 4 5 d 5 5 5 5 5 5 5 5 4
-    . c 4 5 5 5 5 d d d 5 5 5 5 5 b
-    . c 4 d 5 4 5 d 4 4 d 5 5 5 4 c
-    . . c 4 4 d 4 4 4 4 4 d d 5 d c
-    . . . c 4 4 4 4 4 4 4 4 5 5 5 4
-    . . . . c c b 4 4 4 b b 4 5 4 4
-    . . . . . . c c c c c c b b 4 .
-`, 4, 8)
-    ]
+
 
     const player1 = new Character(0, img`
     . . . . . . f f f f . . . . . .
@@ -96,7 +23,8 @@ namespace collect {
     . . . . . f f f f f f . . . . .
     . . . . . f f . . f f . . . . .
 `, 0, 0,
-        info.life, info.setLife, (p: number) => info.changeLifeBy(-p))
+        info.life, info.setLife, (p: number) => info.changeLifeBy(-p),
+        info.setScore)
     const player2 = new Character(1, img`
     . . . . . . 5 . 5 . . . . . . .
     . . . . . f 5 5 5 f f . . . . .
@@ -117,7 +45,8 @@ namespace collect {
 `, 0, 9,
         () => { return info.player2.life() },
         (p: number) => { info.player2.setLife(p) },
-        (p: number) => info.player2.changeLifeBy(-p))
+        (p: number) => info.player2.changeLifeBy(-p),
+        (s: number)=> {info.player2.setScore(s)})
 
     export const PLAYERS = [player1, player2]
 
@@ -127,7 +56,20 @@ namespace collect {
         init()
         _bindControllerEvents()
         _initSpriteOverlapEvents()
+        _initHud() 
         
+    }
+
+    function _initHud() {
+
+        scene.createRenderable(
+            scene.HUD_Z,
+            () => {
+                collect.draw(player1, true)
+                collect.draw(player2, false)
+            }
+        )
+
     }
 
     let currentDirection = -1
@@ -170,6 +112,13 @@ namespace collect {
             let _id = sprites.readDataNumber(playerSprite, "id")
             return PLAYERS[_id]
         }
+
+        sprites.onOverlap(SpriteKind.Player, SpriteKind.Box, (playerSprite, boxSprite) => {
+            let character = getCharacter(playerSprite)
+            character.getBox(BOX)
+
+            BOX.changePosition()
+        })
 
         sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, (playerSprite, foodSprite) => {
 
@@ -239,10 +188,6 @@ namespace collect {
             return;
         }
 
-        // if (closest_path.length == 1) {
-        //     console.log(`${closest_path[0].row}, ${closest_path[0].column}`)
-        // }
-
         let loc = closest_path[1]
 
         let rowDiff = loc.row - playerLoc.row
@@ -260,12 +205,6 @@ namespace collect {
                 break
             }
         }
-
-        // if (ans == -1) {
-        //     console.log(`${rowDiff}, ${colDiff} -> ${loc.row}, ${loc.col}`)
-        // }
-
-        // console.log(`going to ${closest_gem}, direction:${ans}`)
 
         player2.move(ans)
 
@@ -296,6 +235,8 @@ namespace collect {
         for (let gem of GEMS) {
             gem.init()
         }
+
+        BOX.init()
 
         for (let player of PLAYERS) {
             player.init()
