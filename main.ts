@@ -1,1 +1,1 @@
-collect.start_manual_game()
+collect.start_manual_game(collect.Difficulty.NORMAL)

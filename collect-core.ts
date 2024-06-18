@@ -312,7 +312,7 @@ namespace collect {
         }
 
         move(direction: number): void {
-            if (direction != -1) {
+            if (direction != -1 && direction != 4) {
                 tiles.setWallAt(tiles.getTileLocation(this._col, this._row), false)
                 this._row += DIRECTIONS[direction][0]
                 this._col += DIRECTIONS[direction][1]

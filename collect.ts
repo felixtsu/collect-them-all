@@ -112,6 +112,9 @@ namespace collect {
                 currentDirection = 3
             }
         })
+        controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+            currentDirection = 4
+        })
     }
 
     function _initSpriteOverlapEvents() {
@@ -188,36 +191,22 @@ namespace collect {
 
     }
 
+    let aiTargetGem:number = -1
+
     function redGemAiMove() {
+        
+        if (aiTargetGem == -1) {
+            aiTargetGem = randint(0,3)
+        }
 
         if (player2.power() == 0) {
             return;
         }
 
         let playerLoc = player2.getLocation()
-        let closest_path = null
 
-        let closest_gem = ""
-
-        for (let gem of GEMS) {
-            if (gem.name != "red") {
-                continue
-            }
-
-            let path = player2.findPath(gem)
-            if (path == null) {
-                continue
-            }
-            if (closest_path == null) {
-                closest_path = path
-                closest_gem = gem.name
-            } else if (closest_path.length > path.length) {
-                closest_path = path
-                closest_gem = gem.name
-            }
-
-        }
-
+        let closest_path = player2.findPath(GEMS[aiTargetGem])
+       
         if (closest_path == null) {
 
             let direction = randint(0, 3)
