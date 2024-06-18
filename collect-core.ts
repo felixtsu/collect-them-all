@@ -383,6 +383,10 @@ namespace collect {
         getBoxes() : number[] {
             return this._box
         }
+
+        get score() : number {
+            return sumScores(this._scores, this._box)
+        }
  
 
     }

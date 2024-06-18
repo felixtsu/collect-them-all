@@ -46,6 +46,9 @@ namespace collect {
     export const PLAYERS = [player1, player2]
 
 
+
+
+    //%block="start game"
     export function start_manual_game() {
 
         init()
@@ -220,9 +223,6 @@ namespace collect {
         player1.move(currentDirection)
     }
 
-  
-
-
     function init() {
         tiles.setTilemap(tilemap`default`)
         // scene.centerCameraAt(80, 72)
@@ -243,6 +243,16 @@ namespace collect {
             refresh()
             aiMove()
             refresh()
+
+            if (player1.power() == 0 && player2.power() == 0) {
+                if (player1.score > player2.score) {
+                    game.setGameOverMessage(true, `You:${player1.score}, AI:${player2.score}` )
+                    game.gameOver(true)
+                } else {
+                    game.setGameOverMessage(false, `You:${player1.score}, AI:${player2.score}`)
+                    game.gameOver(false)
+                }
+            }
         })
     }
     
