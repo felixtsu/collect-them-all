@@ -1,4 +1,19 @@
+//%icon="\u25c8" color="#6A6FEA"
+//%block="Collect Gems"
+//%block.loc.zh-CN="收集宝石"
 namespace collect {
+
+    export enum Difficulty {
+        //% block="Easy"
+        //% block.loc.zh-CN="简单"
+        EASY, 
+        //% block="Normal"
+        //% block.loc.zh-CN="正常"
+        NORMAL, 
+        //% block="Hard"
+        //% block.loc.zh-CN="困难"
+        HARD
+    }
 
     const player1 = new Character(0, img`
     . . . . . . f f f f . . . . . .
@@ -45,11 +60,15 @@ namespace collect {
 
     export const PLAYERS = [player1, player2]
 
-
-
+    let difficulty = Difficulty.NORMAL
 
     //%block="start game"
-    export function start_manual_game() {
+    //%blockNamespace=collect
+    //%group="Game"
+    //%group.loc.zh-CN="游戏"
+    //%blockId=collect_start_manual_game block="start %difficulty game"
+    //%block.loc.zh-CN="开始 %difficulty 游戏"
+    export function start_manual_game(difficulty:Difficulty) {
 
         init()
         _bindControllerEvents()
@@ -62,7 +81,7 @@ namespace collect {
 
         scene.createRenderable(
             scene.HUD_Z,
-            () => {
+            () => { 
                 collect.draw(player1, true)
                 collect.draw(player2, false)
             }
@@ -147,9 +166,92 @@ namespace collect {
         scene.centerCameraAt(col * 16 + 8, row * 16 + 8)
 
     }
+
+    function randomAiMove() {
+
+        if (player2.power() == 0) {
+            return;
+        }
+
+        let candidates = []
+        for (let direction of [0,1,2,3]) {
+            if (player2.canMove(direction) ) {
+                candidates.push(direction)
+            }
+        }
+
+        if (candidates.length == 0) {
+            return
+        }
+
+        player2.move(randint(0, candidates.length - 1))
+
+    }
+
+    function redGemAiMove() {
+
+        if (player2.power() == 0) {
+            return;
+        }
+
+        let playerLoc = player2.getLocation()
+        let closest_path = null
+
+        let closest_gem = ""
+
+        for (let gem of GEMS) {
+            if (gem.name != "red") {
+                continue
+            }
+
+            let path = player2.findPath(gem)
+            if (path == null) {
+                continue
+            }
+            if (closest_path == null) {
+                closest_path = path
+                closest_gem = gem.name
+            } else if (closest_path.length > path.length) {
+                closest_path = path
+                closest_gem = gem.name
+            }
+
+        }
+
+        if (closest_path == null) {
+
+            let direction = randint(0, 3)
+            while (!(player2.canMove(direction))) {
+                direction = randint(0, 3)
+            }
+            player2.move(direction)
+            return;
+        }
+
+        let loc = closest_path[1]
+
+        let rowDiff = loc.row - playerLoc.row
+        let colDiff = loc.column - playerLoc.column
+
+        if (Math.abs(rowDiff) + Math.abs(colDiff) == 2) {
+            rowDiff = 0
+        }
+
+        let ans = -1
+        for (let i = 0; i < DIRECTIONS.length; i++) {
+            let direction = DIRECTIONS[i]
+            if (direction[0] == rowDiff && direction[1] == colDiff) {
+                ans = i
+                break
+            }
+        }
+
+        player2.move(ans)
+
+    }
     
 
-    function aiMove() {
+    function closestGemAiMove() {
 
         if ( player2.power() == 0) {
             return ;
@@ -241,7 +343,14 @@ namespace collect {
         forever(function () {
             playerMove()
             refresh()
-            aiMove()
+            switch ( difficulty) {
+                case Difficulty.EASY: randomAiMove();break;
+                case Difficulty.NORMAL: redGemAiMove();break;
+                case Difficulty.HARD: closestGemAiMove;break;
+                
+            }
+ 
+            
             refresh()
 
             if (player1.power() == 0 && player2.power() == 0) {
