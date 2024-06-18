@@ -1,10 +1,5 @@
 namespace collect {
 
-
-    
-
-
-
     const player1 = new Character(0, img`
     . . . . . . f f f f . . . . . .
     . . . . f f f 2 2 f f f . . . .

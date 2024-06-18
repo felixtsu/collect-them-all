@@ -93,6 +93,43 @@ namespace collect {
         constructor(name: string, icon: Image, icon5: Image, defaultRow: number, defaultCol: number) {
             super(name, icon, icon5, defaultRow, defaultCol, SpriteKind.Box)
         }
+
+        beOpened(score : number) {
+            let textColor = 7
+            let prefix = "+"
+            if (score < 0) {
+                textColor = 2   
+                prefix = ""
+            }
+            
+
+            let openedBox = sprites.create(img`
+                . b b b b b b b b b b b b b b .
+                b e 4 4 4 4 4 4 4 4 4 4 4 4 4 b
+                b e 4 4 4 4 4 4 4 4 4 4 4 4 e b
+                b e e 4 4 4 4 4 4 4 4 4 4 e e b
+                b b b b b b b d d b b b b b b b
+                . b b b b b b c c b b b b b b .
+                b c c c c c b c c b c c c c c b
+                b c c c c c c b b c c c c c c b
+                b c c c c c c c c c c c c c c b
+                b c c c c c c c c c c c c c c b
+                b b b b b b b b b b b b b b b b
+                b e e e e e e e e e e e e e e b
+                b e e e e e e e e e e e e e e b
+                b c e e e e e e e e e e e e c b
+                b b b b b b b b b b b b b b b b
+                . b b . . . . . . . . . . b b .
+            `)
+
+            openedBox.lifespan = 1000
+            openedBox.z -=1
+            openedBox.sayText(prefix + score.toString(), 1000, false, textColor)
+
+            
+            tiles.placeOnTile(openedBox, tiles.getTileLocation(this._col, this._row))
+            
+        }
         
     }
 
@@ -268,7 +305,6 @@ namespace collect {
             sprites.setDataNumber(this.sprite, "id", this._id)
             this.setPower(100)
 
-
         }
 
         getLocation(): tiles.Location {
@@ -323,6 +359,8 @@ namespace collect {
             } else if (rand == 2) {
                 score = 10
             }
+
+            box.beOpened(score)
 
             this._box.push(score)
 
