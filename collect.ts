@@ -3,6 +3,16 @@
 //%block.loc.zh-CN="收集宝石"
 namespace collect {
 
+    export enum Decision {
+
+        UP = 0, 
+        RIGHT = 1, 
+        DOWN = 2, 
+        LEFT = 3,
+        STAY = 4
+        
+    }
+
     export enum Difficulty {
         //% block="Easy"
         //% block.loc.zh-CN="简单"
@@ -14,6 +24,13 @@ namespace collect {
         //% block.loc.zh-CN="困难"
         HARD
     }
+
+    enum Mode {
+        MANUAL,
+        CODE
+    }
+
+    let mode = Mode.MANUAL
 
     const player1 = new Character(0, img`
     . . . . . . f f f f . . . . . .
@@ -169,6 +186,8 @@ namespace collect {
         scene.centerCameraAt(col * 16 + 8, row * 16 + 8)
 
     }
+
+    let player1MoveCallback :()=>void = null
 
     function randomAiMove() {
 
@@ -330,7 +349,13 @@ namespace collect {
         
 
         forever(function () {
-            playerMove()
+            if (mode == Mode.MANUAL) {
+                playerMove()
+            } else {
+                player1MoveCallback()
+                player1.move(currentDirection)
+            }
+            
             refresh()
             switch ( difficulty) {
                 case Difficulty.EASY: randomAiMove();break;
@@ -338,7 +363,6 @@ namespace collect {
                 case Difficulty.HARD: closestGemAiMove;break;
                 
             }
- 
             
             refresh()
 
@@ -353,6 +377,31 @@ namespace collect {
             }
         })
     }
-    
+
+
+
+    //%block
+    //%group="Code combat"
+    //%group.loc.zh-CN="程序对抗"
+    //%blockId=collect_decide_move 
+    //%block="onMoveDecision"
+    //%block.loc.zh-CN="决定方向"
+    //%weight=99
+    export function willMove( onMoveCallback : () => void ) {
+        mode = Mode.CODE
+        player1MoveCallback = onMoveCallback
+    }
+
+
+    //%block
+    //%group="Code combat"
+    //%group.loc.zh-CN="程序对抗"
+    //%blockId=collect_make_decision
+    //%block="make decision %decision"
+    //%block.loc.zh-CN="决策 %decision"
+    //%weight=99
+    export function decide(decision : Decision) {
+        currentDirection = decision
+    }
 
 }

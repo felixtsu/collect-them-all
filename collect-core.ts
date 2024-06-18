@@ -313,12 +313,17 @@ namespace collect {
 
         move(direction: number): void {
             if (direction != -1 && direction != 4) {
-                tiles.setWallAt(tiles.getTileLocation(this._col, this._row), false)
-                this._row += DIRECTIONS[direction][0]
-                this._col += DIRECTIONS[direction][1]
-                tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._col, this._row))
-                tiles.setWallAt(tiles.getTileLocation(this._col, this._row), true)
+                if (this.canMove(direction)) {
+
+                    tiles.setWallAt(tiles.getTileLocation(this._col, this._row), false)
+                    this._row += DIRECTIONS[direction][0]
+                    this._col += DIRECTIONS[direction][1]
+                    tiles.placeOnTile(this.sprite, tiles.getTileLocation(this._col, this._row))
+                    tiles.setWallAt(tiles.getTileLocation(this._col, this._row), true)
+                }
+
             }
+
 
 
             this.decrPower(1)
